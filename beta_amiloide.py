@@ -12,8 +12,14 @@ dormir = 1
 
 
 class MiServidor(BaseHTTPRequestHandler):
+    def send_cors_headers(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', '*')
+        self.send_header('Access-Control-Allow-Headers', '*')
+
     def do_POST(self):
         self.send_response(200)
+        self.send_cors_headers()
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
 
@@ -23,7 +29,8 @@ class MiServidor(BaseHTTPRequestHandler):
         dormir = 0.5 / payload['freq']
     
     def do_OPTIONS(self):
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_response(200)
+        self.send_cors_headers()
         self.end_headers()
 
 
