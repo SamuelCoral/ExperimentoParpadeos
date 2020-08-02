@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <title>Beta amiloide</title>
+    <meta charset="UTF-8" />
+    <script>
+        function settiar() {
+
+            var payload = {
+                color: ["red", "green", "blue"].map(x => parseInt(document.getElementById(x).value)),
+                freq: parseInt(document.getElementById("freq").value)
+            };  
+            var http = new XMLHttpRequest();
+            http.open("POST", "http://raspberrypi.local:8000", true);
+            http.setRequestHeader("Content-type", "application/json");
+            http.send(JSON.stringify(payload));
+        }
+    </script>
+</header>
+<body>
+
+<label for="red">Rojo:</label>
+<input type="number" min="0" max="255" value="0" id="red" /><br>
+<label for="green">Verde:</label>
+<input type="number" min="0" max="255" value="255" id="green" /><br>
+<label for="blue">Azul:</label>
+<input type="number" min="0" max="255" value="0" id="blue" /><br>
+<br>
+<label for="freq">Frecuencia:</label>
+<input type="number" min="1" value="2" id="freq" /><br>
+<br>
+<button onclick="settiar()">Mandar</button>
+
+</body>
+</html>
