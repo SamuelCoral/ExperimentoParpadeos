@@ -4,6 +4,7 @@ from gpiozero import RGBLED
 from colorzero import Color
 import json
 import time
+import ssl
 
 led = RGBLED(*range(22, 25), active_high=False)
 color = Color('red')
@@ -28,6 +29,7 @@ class MiServidor(BaseHTTPRequestHandler):
 
 direccion_server = ('raspberrypi.local', 8000)
 httpd = HTTPServer(direccion_server, MiServidor)
+httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='/home/pi/.ssl/key.pem', certfile='/home/pi/.ssl/cert.pem', server_side=True)
 hilo_server = Thread(target=httpd.serve_forever)
 hilo_server.start()
 print('Server encendido en {}:{}'.format(*direccion_server))
