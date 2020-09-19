@@ -7,8 +7,12 @@ import time
 import ssl
 
 led = RGBLED(*range(22, 25), active_high=False)
-color = Color('red')
-dormir = 1
+archivo_configuracion = '/home/pi/beta_amiloide.json'
+
+with open(archivo_configuracion, 'r') as conf:
+    conf_json = json.load(conf)
+    color = Color(*conf_json['color'])
+    dormir = 0.5 / conf_json['freq']
 
 
 class MiServidor(BaseHTTPRequestHandler):
@@ -27,6 +31,13 @@ class MiServidor(BaseHTTPRequestHandler):
         payload = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         color = Color(*payload['color'])
         dormir = 0.5 / payload['freq']
+
+        with open(archivo_configuracion, 'w') as conf:
+            conf_json = {
+                'color': [ color.r, color.g, color.b ],
+                'freq': 0.5 / dormir
+            }
+            json.dump(conf_json, conf, indent=4)
     
     def do_OPTIONS(self):
         self.send_response(200)
